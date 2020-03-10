@@ -1,1 +1,20 @@
-HEllo
+.main
+  .main__title
+    %h1
+      質問
+
+
+  .main__form
+    .part
+      %h2
+        質問の箇所
+      = text_field_tag :qpart,"", placeholder: "例 https://master.tech-camp.in/curriculums/3389", class: "box"  
+    
+    .detail
+      %h2
+        質問内容
+      = text_area_tag :qdetail,"",  class: "box auto-resize"
+    
+
+  .main__btn
+    = submit_tag "似た質問を探す", class: :submit

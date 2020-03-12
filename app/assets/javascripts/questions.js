@@ -1,4 +1,5 @@
 $(function(){
+  
 
   function buildHTML(text){
     html = `\
@@ -10,6 +11,7 @@ $(function(){
     return html
   }
 
+  $("textarea").autosize();
 
   $("#submit").on("click", function(e){
     e.preventDefault();

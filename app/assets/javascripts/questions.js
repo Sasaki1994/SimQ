@@ -28,6 +28,13 @@ $(function(){
       
       // 自動スクロール
       $("html,body").animate({scrollTop:$('.response').offset().top - 90}); // 90:微調整
+    }).fail(function(){
+      let errorHTML = ` <div class="response">
+                          <div class="response__body">
+                            <p>サーバーにエラーが生じました</p>
+                          </div>
+                        </div>`;
+      $('.main').append(errorHTML);
     });
 
     

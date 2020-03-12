@@ -11,10 +11,14 @@ class QuestionsController < ApplicationController
     question[:text] = question_params[:text]
     response = post2api(question)
     body = JSON.parse(response.body)
-    body["text"] = body["text"].map do |text|
-      view_context.simple_format(text)
+    if body["success"] == true 
+      body["text"] = body["text"].map do |text|
+        view_context.simple_format(text)
+      end
+      render :json => body
+    else
+      render :json => body
     end
-    render :json => body
   end
 
   private

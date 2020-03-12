@@ -1,4 +1,7 @@
 $(function(){
+
+  // 質問内容フォームのオートリサイズ
+  $("textarea").autosize();
   
   // 類似質問を探す
   $("#submit").on("click", function(e){
@@ -27,8 +30,7 @@ $(function(){
       $("html,body").animate({scrollTop:$('.response').offset().top - 90}); // 90:微調整
     });
 
-    // 質問内容フォームのオートリサイズ
-    $("textarea").autosize();
+    
   });
 
 });

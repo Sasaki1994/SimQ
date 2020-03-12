@@ -29,7 +29,6 @@ $(function(){
       　${text}\
       </div>\
     </div>`;
-    $('.main').append(response)
     return html
   }
 

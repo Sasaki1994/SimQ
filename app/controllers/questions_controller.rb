@@ -19,8 +19,14 @@ class QuestionsController < ApplicationController
     body = JSON.parse(response.body)
 
     # 返却テキストの整形
-    body["text"] = body["text"].map{|text| view_context.simple_format(text)} if body["success"] == true
-    render :json => body
+    if body["success"] == true
+      responses = body['text']
+      responses = ["類似の質問はありませんでした。"] if responses.length == 0
+    else
+      responses = ["質問の探索に失敗しました。\n質問箇所と質問内容を確認してください"]
+    end
+    
+    render partial: 'response', collection: responses
   end
 
   private

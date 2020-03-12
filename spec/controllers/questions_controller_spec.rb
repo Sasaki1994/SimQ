@@ -9,30 +9,30 @@ describe QuestionsController do
   end
 
   describe 'GET #search' do
-    it 'renders json as success' do
+    it 'renders partial response as success' do
       get :search, params: {question: {url: "https://master.tech-camp.in/curriculums/1183", text: "hamlが分からない"}}
-      json = JSON.parse(response.body)
-      expect(json['success']).to eq(true)
+      expect(response).to render_template partial: '_response'
     end
 
-    it 'renders json as fail when url is "" ' do
-      post :search, params: {question: {url: "", text: "hamlが分からない"}}
-      json = JSON.parse(response.body)
-      expect(json['success']).to eq(false)
+    it 'renders partial response as fail by url none' do
+      get :search, params: {question: {url: "", text: "haml"}}
+      expect(response).to render_template partial: '_response'
     end
 
-    it 'renders json as fail when text is "" ' do
-      post :search, params: {question: {url: "https://master.tech-camp.in/curriculums/1183", text: ""}}
-      json = JSON.parse(response.body)
-      expect(json['success']).to eq(false)
+    it 'renders partial response as fail by text' do
+      get :search, params: {question: {url: "https://master.tech-camp.in/curriculums/1183", text: ""}}
+      expect(response).to render_template partial: '_response'
     end
 
-    it 'renders json as fail when url is wrong format ' do
-      post :search, params: {question: {url: "https:///hoge.com", text: "hamlが分からない"}}
-      json = JSON.parse(response.body)
-      expect(json['success']).to eq(false)
+    it 'renders partial response as fail by url type' do
+      get :search, params: {question: {url: "https://yahoo.co.jp", text: ""}}
+      expect(response).to render_template partial: '_response'
     end
 
+    it 'renders partial response as fail by no similar question' do
+      get :search, params: {question: {url: "https://master.tech-camp.in/curriculums/1183", text: "qwertyuiopasdfghj"}}
+      expect(response).to render_template partial: '_response'
+    end
 
   end
       

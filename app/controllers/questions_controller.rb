@@ -1,54 +1,43 @@
 class QuestionsController < ApplicationController
+  require 'net/http'
+  require 'uri'
+  
   def index
-    @responses = []
-    5.times do
-      @responses << generate
+  end
+
+  def search
+    question = {}
+    question[:curriculum_id] = extract_cur_id(question_params[:url])
+    question[:text] = question_params[:text]
+    response = post2api(question)
+    body = JSON.parse(response.body)
+    body["text"] = body["text"].map do |text|
+      view_context.simple_format(text)
     end
+    render :json => body
   end
 
   private
-  def generate
-    text='【質問の箇所】
-    基礎カリキュラム
-    https://master.tech-camp.in/curriculums/3623
-  【質問の種類】
-    実装の相談(エラーが出る/思い通りの表示ができない)
-  【質問の内容】
-    ■ エラー画面のスクリーンショット
-    
-    ■ 問題に関するVScodeのファイル全体のスクリーンショット
-    
-    ■ 問題に関するターミナルやコンソールのスクリーンショット
-    nil>]>
-  irb(main):003:0> Post.find(1)
-    Post Load (0.3ms)  SELECT  `posts`.* FROM `posts` WHERE `posts`.`id` = 1 LIMIT 1
-  => #<Post id: 1, content: "これはあああ", created_at: "2020-02-22 00:00:00", updated_at: "2020-02-22 00:00:00">
-  irb(main):004:0> post
-  Traceback (most recent call last):
-          1: from (irb):4
-  NameError (undefined local variable or method `post\' for main:Object)
-  irb(main):005:0> post
-  Traceback (most recent call last):
-          1: from (irb):5
-  NameError (undefined local variable or method `post\' for main:Object)
-  irb(main):006:0> Post.find(1)
-    Post Load (0.8ms)  SELECT  `posts`.* FROM `posts` WHERE `posts`.`id` = 1 LIMIT 1
-  => #<Post id: 1, content: "これはあああ", created_at: "2020-02-22 00:00:00", updated_at: "2020-02-22 00:00:00">
-  irb(main):007:0> post
-  Traceback (most recent call last):
-          1: from (irb):7
-  NameError (undefined local variable or method `post\' for main:Object)
-  irb(main):008:0> 
-
-    ■ 確認したいことに関連する画面のスクリーンショット
-    
-    ■ 解決したいこと
-    変数ポストに代入できない
-    ■ 調べた内容とそこから立てた仮説
-    入力漏れ
-    ■ 仮説を元に行った作業内容 
-    一つ前のコードを入れてみた'
-    return text
+  def question_params
+    params.require(:question).permit(:url, :text)
   end
 
+  def extract_cur_id(url)
+    reg = url.match(/https:\/\/master.tech-camp.in\/curriculums\/(\d+)$/)
+    curriculum_id = reg ? reg[1] : nil
+    return curriculum_id
+  end
+
+  def post2api(question)
+    target_uri = "http://127.0.0.1:5000/predict"
+    uri = URI.parse(target_uri)
+
+    req = Net::HTTP::Post.new(uri)
+    req.body = question.to_json
+    req["Content-Type"] = 'application/json'
+
+    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+  end
 end

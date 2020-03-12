@@ -16,7 +16,6 @@
       = text_area_tag :qdetail,"",  class: "box auto-resize"
     
 
-  .main__btn
-    = submit_tag "似た質問を探す", class: :submit
+    .main__btn
+      = submit_tag "似た質問を探す", id: :submit, class: :submit
   
-  = render partial: 'response', collection: @responses

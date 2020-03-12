@@ -18,16 +18,9 @@ class QuestionsController < ApplicationController
     response = post2api(question)
     body = JSON.parse(response.body)
 
-    # 後置ifに変更可能
-    if body["success"] == true
-      # 返却テキストの整形
-      body["text"] = body["text"].map do |text|
-        view_context.simple_format(text)
-      end
-      render :json => body
-    else
-      render :json => body
-    end
+    # 返却テキストの整形
+    body["text"] = body["text"].map{|text| view_context.simple_format(text)} if body["success"] == true
+    render :json => body
   end
 
   private

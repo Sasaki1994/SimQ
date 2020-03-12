@@ -8,9 +8,9 @@ describe QuestionsController do
     end
   end
 
-  describe 'POST #search' do
+  describe 'GET #search' do
     it 'renders json as success' do
-      post :search, params: {question: {url: "https://master.tech-camp.in/curriculums/1183", text: "hamlが分からない"}}
+      get :search, params: {question: {url: "https://master.tech-camp.in/curriculums/1183", text: "hamlが分からない"}}
       json = JSON.parse(response.body)
       expect(json['success']).to eq(true)
     end

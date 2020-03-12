@@ -1,27 +1,6 @@
 $(function(){
-  function buildFailHTML(){
-    // 
-    html = `\
-    <div class="response">\
-      <div class="response__body">\
-      　<p>質問の探索に失敗しました。</br>質問の箇所と質問内容を確認してください。</p>\
-        </br>
-      </div>\
-    </div>`;
-    return html
-  }
 
-  function buildNoResHTML(){
-    html = `\
-    <div class="response">\
-      <div class="response__body">\
-      　<p>類似の質問が見つかりませんでした</p>
-        </br>
-      </div>\
-    </div>`;
-    return html
-  }
-
+  // 類似質問レスポンスを描画するテンプレート
   function buildResHTML(text){
     html = `\
     <div class="response">\
@@ -29,7 +8,7 @@ $(function(){
       　${text}\
       </div>\
     </div>`;
-    return html
+    $('.main').append(html)
   }
 
   // 質問内容フォームのオートリサイズ
@@ -44,7 +23,7 @@ $(function(){
 
     $.ajax({
       // questions controller # search action
-      type: 'POST',
+      type: 'GET',
       url:  '/questions',
       data: {
         question: {
@@ -59,23 +38,19 @@ $(function(){
       if (event["success"] == true){
         if (event["n_item"] > 0){
           for(let text of event["text"]) {
-            // 下2行合体可能
-            let response = buildResHTML(text);
-            $('.main').append(response); //ビュー末尾に追加
+            buildResHTML(text);
           }
         }else{
-          // to DRY
-          let response = buildNoResHTML();
-          $('.main').append(response);
+          let noItemText =　"<p>類似の質問が見つかりませんでした</p></br>"
+          buildResHTML(noItemText);
         }
       }else{
-        // to DRY
-        let response = buildFailHTML();
-        $('.main').append(response);
+        let failText =　"<p>質問の探索に失敗しました。</br>質問の箇所と質問内容を確認してください。</p></br>"
+        buildResHTML(failText);
       }
       // 自動スクロール
       $("html,body").animate({scrollTop:$('.response').offset().top - 90}); // 90:微調整
-    })
+    });
   });
 
 });

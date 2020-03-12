@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
   root to: 'questions#index'
-  post 'questions' => 'questions#search'
+  get 'questions' => 'questions#search'
 end

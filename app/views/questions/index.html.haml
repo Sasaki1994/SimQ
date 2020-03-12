@@ -2,20 +2,20 @@
   .main__title
     %h1
       質問
-
-
   .main__form
+    -# URL入力欄
     .part
       %h2
         質問の箇所
       = text_field_tag :qpart,"", placeholder: "例 https://master.tech-camp.in/curriculums/3389", class: "box"  
     
+    -# 質問内容入力欄
     .detail
       %h2
         質問内容
       = text_area_tag :qdetail,"",  class: "box auto-resize"
     
-
+    -# 質問検索ボタン
     .main__btn
       = submit_tag "似た質問を探す", id: :submit, class: :submit
   
